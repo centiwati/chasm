@@ -1,0 +1,226 @@
+units:
+  $default_width: 16
+  $default_height: 16
+points:
+  key:
+    padding: 20
+    spread: 20
+  zones:
+    main:
+      anchor:
+        shift: [100, -100]
+        rotate: -5
+      columns:
+        outer:
+          key:
+            stagger: 0
+            column_net: P011
+        pinky:
+          key:
+            stagger: 5
+            column_net: P104
+        ring:
+          key:
+            stagger: 5
+            column_net: P106
+        middle:
+          key:
+            stagger: 5
+            column_net: P111
+        index:
+          key:
+            stagger: -8
+            column_net: P010
+        inner:
+          key:
+            stagger: 0
+            column_net: P009
+      rows:
+        bottom:
+          row_net: P115
+          mirror.row_net: P024
+        home:
+          row_net: P002
+          mirror.row_net: P022
+        top:
+          row_net: P029
+          mirror.row_net: P020
+        num:
+          row_net: P031
+          mirror.row_net: P017
+    thumb:
+      anchor:
+        ref: main_pinky_bottom
+        shift: [20, -20]
+      rows:
+        thumbrow:
+          row_net: P113
+          mirror.row_net: P100
+      columns:
+        option:
+          key:
+            stagger: 0
+            column_net: P106
+        command:
+          key:
+            spread: 20
+            column_net: P111
+        space1:
+          key:
+            spread: 30
+            column_net: P010
+  mirror:
+    ref: main_inner_num
+    distance: 50
+
+outlines:
+  plate:
+    - what: rectangle
+      where: true
+      asym: both
+      size: [20, 20]
+    - what: rectangle
+      where: main_middle_bottom
+      asym: both
+      size: [80, 50]
+      operation: add
+    - what: rectangle
+      where: main_inner_bottom
+      adjust:
+        ref: main_inner_bottom
+        rotate: 5
+        shift: [27.5, 30]
+      size: [70, 85]
+      operation: add
+    - what: polygon
+      operation: subtract
+      points:
+        - ref: main_inner_bottom
+          shift: [20, 5]
+        - ref: mirror_main_inner_bottom
+          shift: [20, 5]
+        - ref: mirror_main_inner_bottom
+          shift: [15, -15]
+        - ref: main_inner_bottom
+          shift: [15, -15]
+    - what: rectangle
+      where: thumb_command_thumbrow
+      operation: add
+      size: [10, 15]
+      adjust:
+        ref: thumb_command_thumbrow
+        shift: [15, -2.5]
+    - what: rectangle
+      where: mirror_thumb_command_thumbrow
+      operation: add
+      size: [10, 15]
+      adjust:
+        ref: mirror_thumb_command_thumbrow
+        shift: [15, -2.5]
+    - what: rectangle
+      where: thumb_space1_thumbrow
+      operation: add
+      size: [20, 20]
+      adjust:
+        ref: thumb_space1_thumbrow
+        shift: [15.5, 0]
+    - what: rectangle
+      where: mirror_thumb_space1_thumbrow
+      operation: add
+      size: [20, 20]
+      adjust:
+        ref: mirror_thumb_space1_thumbrow
+        shift: [15.5, 0]
+      fillet: 1
+
+pcbs:
+  base:
+    outlines:
+      main:
+        outline: plate
+    footprints:
+      kailh:
+        what: switch_pg1316s
+        where: true
+        params:
+          from: "{{column_net}}"
+          to: "{{colrow}}"
+      nice_nano:
+        what: nice_nano
+        where:
+          ref: main_inner_bottom
+          shift: [25.5, 52]
+          rotate: 275
+        params:
+          orientation: down
+      diode:
+        what: diode_tht_sod123
+        where: /^main|^thumb/
+        params:
+          side: F
+          from: "{{colrow}}"
+          to: "{{row_net}}"
+        adjust:
+          shift: [1, 2.3]
+      mirror_diode:
+        what: diode_tht_sod123
+        where: /^mirror/
+        params:
+          side: F
+          from: "{{colrow}}"
+          to: "{{row_net}}"
+        adjust:
+          shift: [-1, 2.3]
+      jstph:
+        what: jstph
+        where:
+          ref.aggregate.parts: [main_inner_bottom, mirror_main_inner_bottom]
+          shift: [0, 13]
+          rotate: 180
+        params:
+          side: F
+          pos: pos
+          neg: GND
+      horizontal_reset:
+        what: EVQPUC
+        params:
+          side: F
+          from: GND
+          to: RST 
+        where:
+          ref: thumb_space1_thumbrow
+          shift: [23, 0]
+          rotate: -90
+      battery_switch:
+        what: slider
+        where:
+            ref: mirror_thumb_space1_thumbrow
+            shift: [23, 0]
+            rotate: -90
+        params:
+            side: F
+            from: pos
+            to: RAW
+      hole1:
+        what: mountinghole
+        where:
+          ref: thumb_option_thumbrow
+          shift: [0, 12.5]
+      hole2:
+        what: mountinghole
+        where:
+          ref: mirror_thumb_option_thumbrow
+          shift: [0, 12.5]
+      hole3:
+        what: mountinghole
+        where:
+          ref.aggregate.parts: [main_inner_home, mirror_main_inner_home] 
+          shift: [-12.5, 0]
+      hole4:
+        what: mountinghole
+        where:
+          ref.aggregate.parts: [main_inner_home, mirror_main_inner_home] 
+          shift: [12.5, 0]
+        
+
+        
