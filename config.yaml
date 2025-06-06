@@ -131,6 +131,11 @@ outlines:
       adjust:
         ref: mirror_thumb_space1_thumbrow
         shift: [15.5, 0]
+    - what: rectangle
+      where: main_pinky_num
+      asym: both
+      size: [60, 20]
+      operation: add
       fillet: 1
 
 pcbs:
@@ -143,6 +148,9 @@ pcbs:
         what: switch_pg1316s
         where: true
         params:
+          pad_vias: true
+          pad_via_size: 0.8
+          pad_via_hole: 0.4
           from: "{{column_net}}"
           to: "{{colrow}}"
       nice_nano:
@@ -201,26 +209,44 @@ pcbs:
             side: F
             from: pos
             to: RAW
-      hole1:
-        what: mountinghole
-        where:
-          ref: thumb_option_thumbrow
-          shift: [0, 12.5]
-      hole2:
-        what: mountinghole
-        where:
-          ref: mirror_thumb_option_thumbrow
-          shift: [0, 12.5]
-      hole3:
+      clbhole:
         what: mountinghole
         where:
           ref.aggregate.parts: [main_inner_home, mirror_main_inner_home] 
-          shift: [-12.5, 0]
-      hole4:
+          shift: [-7.5, -13.5]
+      crbhole:
         what: mountinghole
         where:
           ref.aggregate.parts: [main_inner_home, mirror_main_inner_home] 
-          shift: [12.5, 0]
+          shift: [7.5, -13.5]
+      clthole:
+        what: mountinghole
+        where:
+          ref.aggregate.parts: [main_inner_num, mirror_main_inner_num]
+          shift: [-12.5, 7.5]
+      crthole:
+        what: mountinghole
+        where:
+          ref.aggregate.parts: [main_inner_num, mirror_main_inner_num]
+          shift: [12.5, 7.5]
+      bhole:
+        what: mountinghole
+        where:
+          ref: main_pinky_bottom
+          shift: [5, -12]
+        asym: both
+      thole:
+        what: mountinghole
+        where:
+          ref: main_outer_num
+          shift: [-5, 11.5]
+        asym: both
+      lthhole:
+        what: mountinghole
+        where:
+          ref: thumb_command_thumbrow
+          shift: [15, -6]
+        asym: both
         
 
         
